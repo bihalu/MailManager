@@ -1,0 +1,71 @@
+﻿@model List<Account>
+@{
+    ViewData["Title"] = "Benutzer";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 pull-left">
+            <h2>@ViewData["Title"] <span class="badge">@Model.Count</span></h2>
+        </div>
+        <div class="col-md-1 pull-right">
+            <h2><a href="/Account/Create"><span class="glyphicon glyphicon-plus pull-right" aria-hidden="true" title="neuen Benutzer anlegen"></span></a></h2>
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr class="active">
+                <th>Benutzer</th>
+                <th>Dom&auml;ne</th>
+                <th>Aktiv</th>
+                <th>EMail Limit</th>
+                <th>EMail nur senden</th>
+                <th>Bearbeiten</th>
+            </tr>
+        </thead>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var account = Model[i];
+            <tbody>
+                <tr>
+                    <th>@account.Username</th>
+                    <th><i class="text-primary">@account.Domainname</i></th>
+                    <th>
+                        @if (account.Enabled)
+                        {
+                            <i class="fa fa-check fa-lg" style="color:green" aria-hidden="true"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-times fa-lg" style="color:red" aria-hidden="true"></i>
+                        }
+                    </th>
+                    <th>@account.Quota kb</th>
+                    <th>
+                        @if (account.Sendonly)
+                        {
+                            <i class="fa fa-paper-plane fa-lg" aria-hidden="true"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-exchange fa-lg" aria-hidden="true"></i>
+                        }
+                    </th>
+                    <th>
+                        <a href="/Account/Edit?id=@account.Id"><i class="fa fa-edit fa-lg" aria-hidden="true" title="Benutzer bearbeiten"></i></a>
+                        &nbsp;&nbsp;
+                        @if (account.Enabled)
+                        {
+                            <a href="/Account/Lock?id=@account.Id"><i class="fa fa-lock fa-lg" aria-hidden="true" title="Benutzer sperren"></i></a>
+                        }
+                        else
+                        {
+                            <a href="/Account/Unlock?id=@account.Id"><i class="fa fa-unlock fa-lg" aria-hidden="true" title="Benutzer entsperren"></i></a>
+                        }
+                        &nbsp;&nbsp;
+                        <a href="/Account/ResetPassword?id=@account.Id"><i class="fa fa-key fa-lg" aria-hidden="true" title="Kennwort zurücksetzen"></i></a>
+                    </th>
+                </tr>
+            </tbody>
+        }
+    </table>
+</div>

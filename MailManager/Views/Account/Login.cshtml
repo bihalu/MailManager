@@ -1,0 +1,35 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Anmelden";
+}
+<div class="container">
+    <h2>@ViewData["Title"]</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post">
+                <div class="input-group form-group">
+                    <span class="input-group-addon"><b>Benutzer:&nbsp;</b></span>
+                    <input asp-for="@Model.Username" class="form-control" />
+                </div>
+                <div class="input-group form-group">
+                    <span class="input-group-addon"><b>Kennwort:</b></span>
+                    <input asp-for="@Model.Password" class="form-control" type="password" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="showHidePassword('Password')"><i class="fa fa-eye" title="Kennwort anzeigen"></i></button>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Anmelden</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    @if (null != Model && Model.ShowMessage)
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <p class="alert-danger">@Model.Message</p>
+            </div>
+        </div>
+    }
+</div>

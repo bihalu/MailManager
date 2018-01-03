@@ -1,0 +1,26 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Fehler";
+}
+<div class="container">
+    <h2 class="text-danger">Ooops es ist ein Fehler aufgetreten</h2>
+    @if (Model.ShowRequestId)
+    {
+        <p><strong>Request ID:</strong> <code>@Model.RequestId</code></p>
+    }
+    <p>Fehler k&ouml;nnen vorkommen <i class="fa fa-frown-o fa-lg" aria-hidden="true"></i></p>
+    <p>
+        Wenn Du den Fehler reproduzieren kannst, und meinst dass er behoben werden sollte,
+        dann probier es doch mal selber aus <i class="fa fa-smile-o fa-lg" aria-hidden="true"></i>.
+    </p>
+    <p>
+        Setze dazu bitte die Umgebungsvariable ASPNETCORE_ENVIRONMENT='Development' und starte die Web Anwendung neu.
+        Dann erh&auml;ltst Du detailiertere Informationen zu dem Fehler.
+    </p>
+    <p>
+        Der Quellcode liegt auf GitHub <i class="fa fa-github fa-lg" aria-hidden="true"></i> <a href="https://github.com/bihalu/MailManager">https://github.com/bihalu/MailManager</a>.
+    </p>
+    <p>
+        Bei einem richtig schwerwiegenden Fehler schreib eine eMail an hansi<i class="fa fa-at fa-lg" aria-hidden="true"></i>bihalu.de
+    </p>
+</div>
