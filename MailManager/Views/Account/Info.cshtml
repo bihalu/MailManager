@@ -1,26 +1,24 @@
 ﻿@{
     ViewData["Title"] = "Benutzer Info";
 }
-<div class="container">
-    <h2>@ViewData["Title"]</h2>
-    <div class="row">
-        <div class="col-md-4">
-            <h4>Benutzer: <i class="text-primary">@User.Identity.Name</i></h4>
-        </div>
+<h2>@ViewData["Title"]</h2>
+<div class="row">
+    <div class="col-md-4">
+        <h4>Benutzer: <i class="text-primary">@User.Identity.Name</i></h4>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-            <h4>
-                Rolle:
-                @if(User.IsInRole("Admin"))
-                {
-                    <i class="text-primary">Administrator</i>
-                }
-                else
-                {
-                    <i class="text-primary">Benutzer</i>
-                }
-            </h4>
-        </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <h4>
+            Rolle:
+            @if (User.IsInRole("Admin"))
+            {
+                <i class="text-primary">Administrator</i>
+            }
+            else
+            {
+                <i class="text-primary">Benutzer</i>
+            }
+        </h4>
     </div>
 </div>

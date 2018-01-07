@@ -10,6 +10,8 @@ namespace MailManager.Models
 
         public string ConfirmPassword { get; set; }
 
+        public string Domainname { get; set; }
+
         public string Message { get; set; }
 
         public bool ShowMessage => !string.IsNullOrEmpty(Message);

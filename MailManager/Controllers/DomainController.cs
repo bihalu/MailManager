@@ -41,5 +41,65 @@ namespace MailManager.Controllers
             }
             return View(domains);
         }
+
+        [HttpGet]
+        [Authorize(Policy="IsAdmin")]
+        public IActionResult Edit([FromQuery] string name)
+        {
+            Policy policy = _dataContext.Policies.Where(d => d.Domainname == name).FirstOrDefault();
+
+            if (null == policy)
+            {
+                policy = new Policy()
+                {
+                    Id = -1,
+                    Domainname = name,
+                    Policyrule = string.Empty,
+                    Params = string.Empty
+                };
+            }
+
+            return View(policy);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "IsAdmin")]
+        public IActionResult Edit([FromForm] Policy input)
+        {
+            if(input.Id < 0)
+            {
+                var policy = new Policy()
+                {
+                    Domainname = input.Domainname,
+                    Policyrule = input.Policyrule,
+                    Params = input.Params
+                };
+
+                _dataContext.Policies.Add(policy);
+                _dataContext.SaveChanges();
+
+                return RedirectToAction("Index", "Domain");
+            }
+            else
+            {
+                var policy = _dataContext.Policies.Find(input.Id);
+                if(policy.Policyrule != input.Policyrule || policy.Params != input.Params)
+                {
+                    policy.Policyrule = input.Policyrule;
+                    policy.Params = input.Params;
+                    _dataContext.SaveChanges();
+
+                    return RedirectToAction("Index", "Domain");
+                }
+            }
+
+            return View(input);
+        }
+
+        [Authorize(Policy = "IsAdmin")]
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }

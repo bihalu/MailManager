@@ -34,7 +34,7 @@ namespace MailManager.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login([FromForm] LoginViewModel login)
+        public IActionResult Login([FromForm] LoginViewModel login, [FromQuery] string returnUrl)
         {
             if (string.IsNullOrEmpty(login.Username) || string.IsNullOrEmpty(login.Password))
             {
@@ -46,12 +46,19 @@ namespace MailManager.Controllers
 
             if (null == account)
             {
-                login.Message = "Zugriff verweigert!";
+                login.Message = "Benutzer oder Kennwort ungültig!";
                 return View(login);
             }
             _userManager.SignIn(HttpContext, account, false);
 
-            return RedirectToAction("Index", "Home");
+            if(string.IsNullOrEmpty(returnUrl))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return Redirect(returnUrl);
+            }
         }
 
         [HttpGet]
@@ -82,6 +89,7 @@ namespace MailManager.Controllers
             return View(accounts);
         }
 
+        [HttpGet]
         [Authorize(Policy = "IsAdmin")]
         public IActionResult Edit([FromQuery] int id)
         {
@@ -92,7 +100,25 @@ namespace MailManager.Controllers
                 return RedirectToAction("Index", "Account");
             }
 
-            return View();
+            return View(account);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "IsAdmin")]
+        public IActionResult Edit([FromForm] Account input)
+        {
+            var account = _dataContext.Accounts.Find(input.Id);
+
+            if(account.Quota != input.Quota || account.Sendonly != input.Sendonly)
+            {
+                account.Quota = input.Quota;
+                account.Sendonly = input.Sendonly;
+                _dataContext.SaveChanges();
+
+                return RedirectToAction("Index", "Account");
+            }
+
+            return View(input);
         }
 
         [HttpGet]
@@ -144,7 +170,8 @@ namespace MailManager.Controllers
                         Id = account.Id,
                         Username = account.Username,
                         Password = string.Empty,
-                        ConfirmPassword = string.Empty
+                        ConfirmPassword = string.Empty,
+                        Domainname = account.Domainname
                     };
 
                     return View(model);
@@ -173,6 +200,12 @@ namespace MailManager.Controllers
             }
 
             return RedirectToAction("AccessDenied", "Account");
+        }
+
+        [Authorize(Policy = "IsAdmin")]
+        public IActionResult Create()
+        {
+            return View();
         }
     }
 }

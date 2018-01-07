@@ -1,17 +1,64 @@
-﻿@{
+﻿@model Account
+@{
     ViewData["Title"] = "Benutzer ändern";
 }
-<div class="container">
-    <h2>@ViewData["Title"]</h2>
-    <div class="row">
-        <div class="col-md-4">
-            <h4>Benutzer: <i class="text-primary">@User.Identity.Name</i></h4>
+<h2>@ViewData["Title"]</h2>
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Benutzer: <i class="text-primary">@Model.Username@@@Model.Domainname</i></b>
+            </div>
+            <div class="panel-body">
+                <form method="post">
+                    @{
+                        string direction = Model.Sendonly ? "nur senden" : "senden und empfangen";
+                    }
+                    <input asp-for="@Model.Id" hidden />
+                    <input asp-for="@Model.Username" hidden />
+                    <input asp-for="@Model.Password" hidden />
+                    <input asp-for="@Model.Domainname" hidden />
+                    <input asp-for="@Model.Sendonly" hidden />
+                    <div class="input-group form-group">
+                        <span class="input-group-addon" style="width:150px"><b>EMail Limit:</b></span>
+                        <input asp-for="@Model.Quota" class="form-control" step="512" />
+                        <span class="input-group-addon">kb&nbsp;</span>
+                        <div class="input-group-btn btn-group btn-group-justified">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary" onclick="setValue('Quota', 2048)" title="Limit auf 2 MB setzen">2 MB</button>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary" onclick="setValue('Quota', 5120)" title="Limit auf 5 MB setzen">5 MB</button>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary" onclick="setValue('Quota', 10240)" title="Limit auf 10 MB setzen">10 MB</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group form-group">
+                        <span class="input-group-addon" style="width:150px"><b>EMail Richtung:</b></span>
+                        <input id="SendonlyText" class="form-control" value="@direction" />
+                        <div class="input-group-btn btn-group btn-group-justified">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary" onclick="toggleCheckbox('Sendonly', true)"><i class="fa fa-paper-plane" title="EMail nur senden"></i></button>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary" onclick="toggleCheckbox('Sendonly', false)"><i class="fa fa-exchange" title="EMail senden und empfangen"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Speichern</button>
+                        &nbsp;&nbsp;
+                        <a asp-controller="Account" asp-action="Index" class="btn btn-danger">Abbrechen</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-
-            Diese Seite ist noch nicht fertig
-        </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <p></p>
     </div>
 </div>
