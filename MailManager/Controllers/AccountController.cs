@@ -152,8 +152,13 @@ namespace MailManager.Controllers
         }
 
         [Authorize]
-        public IActionResult ResetPassword([FromQuery] int id, [FromForm] LoginViewModel login)
+        public IActionResult ResetPassword([FromQuery] int id, string name, [FromForm] LoginViewModel login)
         {
+            if(id == 0 && !string.IsNullOrEmpty(name))
+            {
+                id = _dataContext.Accounts.Where(a => a.Username == name).FirstOrDefault().Id;
+            }
+
             var account = _dataContext.Accounts.Find(id);
 
             if(null == account)

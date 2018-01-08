@@ -4,21 +4,24 @@
 <h2>@ViewData["Title"]</h2>
 <div class="row">
     <div class="col-md-4">
-        <h4>Benutzer: <i class="text-primary">@User.Identity.Name</i></h4>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <h4>
-            Rolle:
-            @if (User.IsInRole("Admin"))
-            {
-                <i class="text-primary">Administrator</i>
-            }
-            else
-            {
-                <i class="text-primary">Benutzer</i>
-            }
-        </h4>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Name: <i class="text-primary">@User.Identity.Name</i></b>
+                <a class="pull-right" href="/Account/ResetPassword?name=@User.Identity.Name"><i class="fa fa-key fa-lg" aria-hidden="true" title="Kennwort ändern"></i></a>
+            </div>
+            <div class="panel-body">
+                <b>
+                    Rolle:
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <i class="text-primary">Administrator</i>
+                    }
+                    else
+                    {
+                        <i class="text-primary">Benutzer</i>
+                    }
+                </b>
+            </div>
+        </div>
     </div>
 </div>

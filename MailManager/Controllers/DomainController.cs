@@ -29,31 +29,38 @@ namespace MailManager.Controllers
 
             if (_dataContext.Domains.Any())
             {
-                foreach (var d in _dataContext.Domains)
+                foreach (var domain in _dataContext.Domains)
                 {
-                    var userCount = _dataContext.Accounts.Where(a => a.Domainname == d.Domainname).Count(); 
-                    
-                    var mailDirectory = _configuration["Mail:Directory"];
-                    var driveInfo = new DriveInfo(mailDirectory.Substring(0, 1));
-                    var domainDirectory = new DirectoryInfo(Path.Combine(mailDirectory, d.Domainname));
-                    var directorySize = DirectorySize(domainDirectory, true);
-
-                    var domain = new DomainViewModel()
-                    {
-                        Id = d.Id,
-                        Domainname = d.Domainname,
-                        UserCount = userCount,
-                        DirectorySize = directorySize,
-                        FreeSpace = driveInfo.AvailableFreeSpace                        
-                    };
-
-                    domains.Add(domain);
+                    domains.Add(GetDomainInfo(domain.Id));
                 }
             }
             return View(domains);
         }
 
-        private long DirectorySize(DirectoryInfo dir, bool includeSubDir)
+        private DomainViewModel GetDomainInfo(int id)
+        {
+            var domain = _dataContext.Domains.Find(id);
+
+            if (null == domain) throw new Exception($"Domäne mit der id={id} nicht gefunden!");
+
+            var userCount = _dataContext.Accounts.Where(account => account.Domainname == domain.Domainname).Count();
+
+            var mailDirectory = _configuration["Mail:Directory"];
+            var driveInfo = new DriveInfo(mailDirectory.Substring(0, 1));
+            var domainDirectory = new DirectoryInfo(Path.Combine(mailDirectory, domain.Domainname));
+            var directorySize = GetDirectorySize(domainDirectory, true);
+
+            return new DomainViewModel()
+            {
+                Id = domain.Id,
+                Domainname = domain.Domainname,
+                UserCount = userCount,
+                DirectorySize = directorySize,
+                FreeSpace = driveInfo.AvailableFreeSpace
+            };
+        }
+
+        private long GetDirectorySize(DirectoryInfo dir, bool includeSubDir)
         {
             long size = 0;
 
@@ -63,21 +70,68 @@ namespace MailManager.Controllers
 
                 if (includeSubDir)
                 {
-                    size += dir.EnumerateDirectories().Sum(d => DirectorySize(d, true));
+                    size += dir.EnumerateDirectories().Sum(d => GetDirectorySize(d, true));
                 }
             }
             catch(Exception e)
             {
-                Console.WriteLine("Error Get DirectorySize: " + e.Message);
+                Console.WriteLine("Error GetDirectorySize: " + e.Message);
             }
 
             return size;
         }
 
         [Authorize(Policy = "IsAdmin")]
-        public IActionResult Create()
+        public IActionResult Create([FromForm] DomainViewModel domain)
         {
-            return View();
+            if(string.IsNullOrEmpty(domain.Domainname))
+            {
+                domain.Message = "Bitte neuen Domänennamen eingeben";
+
+                return View(domain);
+            }
+
+            var existingDomain = _dataContext.Domains.Where(d => d.Domainname == domain.Domainname).FirstOrDefault();
+
+            if(null != existingDomain)
+            {
+                domain.Message = $"Domäne {domain.Domainname} existiert schon";
+
+                return View(domain);
+            }
+
+            _dataContext.Domains.Add(new Domain() { Domainname = domain.Domainname });
+            _dataContext.SaveChanges();
+
+            return RedirectToAction("Index", "Domain");
+        }
+
+        [Authorize(Policy = "IsAdmin")]
+        public IActionResult Delete([FromQuery] int id, [FromForm] DomainViewModel domain)
+        {
+            if(domain.Id == 0)
+            {
+                domain = GetDomainInfo(id);
+            }
+
+            if(domain.UserCount > 0)
+            {
+                domain.Message = $"Die Domäne {domain.Domainname} hat noch Benutzer!";
+
+                return View(domain);
+            }
+
+            if(domain.ConfirmDelete != domain.Domainname)
+            {
+                domain.Message = $"Der Domänen Name {domain.Domainname} stimmt nicht";
+
+                return View(domain);
+            }
+
+            _dataContext.Domains.Remove(_dataContext.Domains.Find(domain.Id));
+            _dataContext.SaveChanges();
+
+            return RedirectToAction("Index", "Domain");
         }
     }
 }

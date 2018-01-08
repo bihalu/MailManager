@@ -25,8 +25,9 @@ namespace MailManager
                 options => options.UseMySql(Configuration.GetConnectionString("DatabaseConnection"))
             );
 
+            int cookieExpiryDays = Configuration.GetValue("Security:CookieExpiryDays", 7);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options => options.ExpireTimeSpan = TimeSpan.FromDays(7));
+                .AddCookie(options => options.ExpireTimeSpan = TimeSpan.FromDays(cookieExpiryDays));
 
             services.AddAuthorization(options =>
                 options.AddPolicy("IsAdmin", policy =>

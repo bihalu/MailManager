@@ -15,6 +15,7 @@ else
     <div class="col-md-1 pull-right">
         <h2><a href="/Domain/Create"><span class="glyphicon glyphicon-plus pull-right" aria-hidden="true" title="neue Domäne anlegen"></span></a></h2>
     </div>
+
 </div>
 @for (int i = 0; i < Model.Count; i++)
 {
@@ -22,26 +23,25 @@ else
         <div class="col-md-6">
             @{
                 var domain = Model[i];
-                var w1 = (int)((float)(domain.DirectorySize == 0 ? 1 : domain.DirectorySize) / domain.FreeSpace * 100);
-                var w2 = 100 - w1;
             }
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <b>Dom&auml;ne: <i class="text-primary">@domain.Domainname</i></b>
+                    <a class="pull-right" href="/Domain/Delete?id=@domain.Id"><i class="fa fa-times fa-lg text-primary" aria-hidden="true" title="Domäne löschen"></i></a>
                 </div>
                 <div class="panel-body">
                     <b>Benutzer: <span class="badge">@domain.UserCount</span></b>
                     <br />
                     <br />
-                    <b>Speicher:</b> (@domain.DirectorySize bytes belegt, @domain.FreeSpace bytes frei)
+                    <b>Speicher:</b> @domain.MemoryUsage
                     <br />
                     <br />
                     <div class="progress">
-                        <div class="progress-bar progress-bar-danger" role="progressbar" style="width:@w1%">
-                            @w1%    
+                        <div class="progress-bar progress-bar-danger" role="progressbar" style="width:@domain.PercentageUsed%">
+                            @domain.PercentageUsed%
                         </div>
-                        <div class="progress-bar progress-bar-success" role="progressbar" style="width:@w2%">
-                            @w2%
+                        <div class="progress-bar progress-bar-success" role="progressbar" style="width:@domain.PercentageFree%">
+                            @domain.PercentageFree%
                         </div>
                     </div>
                 </div>
@@ -52,26 +52,25 @@ else
             <div class="col-md-6">
                 @{
                     domain = Model[i];
-                    w1 = (int)((float)(domain.DirectorySize == 0 ? 1 : domain.DirectorySize) / domain.FreeSpace * 100);
-                    w2 = 100 - w1;
                 }
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <b>Dom&auml;ne: <i class="text-primary">@domain.Domainname</i></b>
+                        <a class="pull-right" href="/Domain/Delete?id=@domain.Id"><i class="fa fa-times fa-lg text-primary" aria-hidden="true" title="Domäne löschen"></i></a>
                     </div>
                     <div class="panel-body">
                         <b>Benutzer: <span class="badge">@domain.UserCount</span></b>
                         <br />
                         <br />
-                        <b>Speicher:</b> (@domain.DirectorySize bytes belegt, @domain.FreeSpace bytes frei)
+                        <b>Speicher:</b> @domain.MemoryUsage
                         <br />
                         <br />
                         <div class="progress">
-                            <div class="progress-bar progress-bar-danger" role="progressbar" style="width:@w1%">
-                                @w1%
+                            <div class="progress-bar progress-bar-danger" role="progressbar" style="width:@domain.PercentageUsed%">
+                                @domain.PercentageUsed%
                             </div>
-                            <div class="progress-bar progress-bar-success" role="progressbar" style="width:@w2%">
-                                @w2%
+                            <div class="progress-bar progress-bar-success" role="progressbar" style="width:@domain.PercentageFree%">
+                                @domain.PercentageFree%
                             </div>
                         </div>
                     </div>
