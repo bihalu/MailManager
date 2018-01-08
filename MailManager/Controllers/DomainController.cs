@@ -1,7 +1,11 @@
 ﻿using MailManager.Data;
+using MailManager.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MailManager.Controllers
@@ -11,89 +15,63 @@ namespace MailManager.Controllers
     {
         private readonly DataContext _dataContext;
 
-        public DomainController(DataContext dataContext)
+        private IConfiguration _configuration;
+
+        public DomainController(DataContext dataContext, IConfiguration configuration)
         {
             _dataContext = dataContext;
+            _configuration = configuration;
         }
 
         public IActionResult Index()
         {
-            var domains = new List<Policy>();
+            var domains = new List<DomainViewModel>();
 
             if (_dataContext.Domains.Any())
             {
-                foreach (var domain in _dataContext.Domains)
+                foreach (var d in _dataContext.Domains)
                 {
-                    Policy policy = _dataContext.Policies.Where(d => d.Domainname == domain.Domainname).FirstOrDefault();
+                    var userCount = _dataContext.Accounts.Where(a => a.Domainname == d.Domainname).Count(); 
+                    
+                    var mailDirectory = _configuration["Mail:Directory"];
+                    var driveInfo = new DriveInfo(mailDirectory.Substring(0, 1));
+                    var domainDirectory = new DirectoryInfo(Path.Combine(mailDirectory, d.Domainname));
+                    var directorySize = DirectorySize(domainDirectory, true);
 
-                    if (null == policy)
+                    var domain = new DomainViewModel()
                     {
-                        policy = new Policy()
-                        {
-                            Domainname = domain.Domainname,
-                            Policyrule = string.Empty,
-                            Params = string.Empty
-                        };
-                    }
+                        Id = d.Id,
+                        Domainname = d.Domainname,
+                        UserCount = userCount,
+                        DirectorySize = directorySize,
+                        FreeSpace = driveInfo.AvailableFreeSpace                        
+                    };
 
-                    domains.Add(policy);
+                    domains.Add(domain);
                 }
             }
             return View(domains);
         }
 
-        [HttpGet]
-        [Authorize(Policy="IsAdmin")]
-        public IActionResult Edit([FromQuery] string name)
+        private long DirectorySize(DirectoryInfo dir, bool includeSubDir)
         {
-            Policy policy = _dataContext.Policies.Where(d => d.Domainname == name).FirstOrDefault();
+            long size = 0;
 
-            if (null == policy)
+            try
             {
-                policy = new Policy()
+                size = dir.EnumerateFiles().Sum(f => f.Length);
+
+                if (includeSubDir)
                 {
-                    Id = -1,
-                    Domainname = name,
-                    Policyrule = string.Empty,
-                    Params = string.Empty
-                };
-            }
-
-            return View(policy);
-        }
-
-        [HttpPost]
-        [Authorize(Policy = "IsAdmin")]
-        public IActionResult Edit([FromForm] Policy input)
-        {
-            if(input.Id < 0)
-            {
-                var policy = new Policy()
-                {
-                    Domainname = input.Domainname,
-                    Policyrule = input.Policyrule,
-                    Params = input.Params
-                };
-
-                _dataContext.Policies.Add(policy);
-                _dataContext.SaveChanges();
-
-                return RedirectToAction("Index", "Domain");
-            }
-            else
-            {
-                var policy = _dataContext.Policies.Find(input.Id);
-                if(policy.Policyrule != input.Policyrule || policy.Params != input.Params)
-                {
-                    policy.Policyrule = input.Policyrule;
-                    policy.Params = input.Params;
-                    _dataContext.SaveChanges();
-
-                    return RedirectToAction("Index", "Domain");
+                    size += dir.EnumerateDirectories().Sum(d => DirectorySize(d, true));
                 }
             }
+            catch(Exception e)
+            {
+                Console.WriteLine("Error Get DirectorySize: " + e.Message);
+            }
 
-            return View(input);
+            return size;
         }
 
         [Authorize(Policy = "IsAdmin")]

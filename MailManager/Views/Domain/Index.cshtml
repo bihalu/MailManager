@@ -1,4 +1,4 @@
-﻿@model List<Policy>
+﻿@model List<DomainViewModel>
 @if (Model.Count > 1)
 {
     ViewData["Title"] = "Domänen";
@@ -22,27 +22,27 @@ else
         <div class="col-md-6">
             @{
                 var domain = Model[i];
+                var w1 = (int)((float)(domain.DirectorySize == 0 ? 1 : domain.DirectorySize) / domain.FreeSpace * 100);
+                var w2 = 100 - w1;
             }
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-md-6 pull-left">
-                            <b>Dom&auml;ne: <i class="text-primary">@domain.Domainname</i></b>
-                        </div>
-                        <div class="col-md-1 pull-right">
-                            <a href="/Domain/Edit?name=@domain.Domainname"><i class="fa fa-edit fa-lg text-primary" aria-hidden="true" title="Domäne bearbeiten"></i></a>
-                        </div>
-                    </div>
+                    <b>Dom&auml;ne: <i class="text-primary">@domain.Domainname</i></b>
                 </div>
                 <div class="panel-body">
-                    <div class="input-group">
-                        <span class="input-group-addon"><b>Richtlinie:&nbsp;</b></span>
-                        <input type="text" class="form-control" value="@domain.Policyrule">
-                    </div>
+                    <b>Benutzer: <span class="badge">@domain.UserCount</span></b>
                     <br />
-                    <div class="input-group">
-                        <span class="input-group-addon"><b>Parameter:</b></span>
-                        <input type="text" class="form-control" value="@domain.Params">
+                    <br />
+                    <b>Speicher:</b> (@domain.DirectorySize bytes belegt, @domain.FreeSpace bytes frei)
+                    <br />
+                    <br />
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-danger" role="progressbar" style="width:@w1%">
+                            @w1%    
+                        </div>
+                        <div class="progress-bar progress-bar-success" role="progressbar" style="width:@w2%">
+                            @w2%
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,27 +52,27 @@ else
             <div class="col-md-6">
                 @{
                     domain = Model[i];
+                    w1 = (int)((float)(domain.DirectorySize == 0 ? 1 : domain.DirectorySize) / domain.FreeSpace * 100);
+                    w2 = 100 - w1;
                 }
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-md-6 pull-left">
-                                <b>Dom&auml;ne: <i class="text-primary">@domain.Domainname</i></b>
-                            </div>
-                            <div class="col-md-1 pull-right">
-                                <a href="/Domain/Edit?name=@domain.Domainname"><i class="fa fa-edit fa-lg text-primary" aria-hidden="true" title="Domäne bearbeiten"></i></a>
-                            </div>
-                        </div>
+                        <b>Dom&auml;ne: <i class="text-primary">@domain.Domainname</i></b>
                     </div>
                     <div class="panel-body">
-                        <div class="input-group">
-                            <span class="input-group-addon" style="width:100px"><b>Richtlinie:</b></span>
-                            <input type="text" class="form-control" value="@domain.Policyrule">
-                        </div>
+                        <b>Benutzer: <span class="badge">@domain.UserCount</span></b>
                         <br />
-                        <div class="input-group">
-                            <span class="input-group-addon" style="width:100px"><b>Parameter:</b></span>
-                            <input type="text" class="form-control" value="@domain.Params">
+                        <br />
+                        <b>Speicher:</b> (@domain.DirectorySize bytes belegt, @domain.FreeSpace bytes frei)
+                        <br />
+                        <br />
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-danger" role="progressbar" style="width:@w1%">
+                                @w1%
+                            </div>
+                            <div class="progress-bar progress-bar-success" role="progressbar" style="width:@w2%">
+                                @w2%
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 
 namespace MailManager.Data
 {
-    public class Policy
+    public class TlsPolicy
     {
         [Column("id")]
         public int Id { get; set; }

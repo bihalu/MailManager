@@ -10,7 +10,7 @@ namespace MailManager.Data
 
         public DbSet<Domain> Domains { get; set; }
 
-        public DbSet<Policy> Policies { get; set; }
+        public DbSet<TlsPolicy> TlsPolicies { get; set; }
 
         public DbSet<Account> Accounts { get; set; }
         
@@ -27,8 +27,8 @@ namespace MailManager.Data
             builder.Entity<Alias>().HasKey(m => m.Id);
             builder.Entity<Alias>().ToTable("aliases");
 
-            builder.Entity<Policy>().HasKey(m => m.Id);
-            builder.Entity<Policy>().ToTable("tlspolicies");
+            builder.Entity<TlsPolicy>().HasKey(m => m.Id);
+            builder.Entity<TlsPolicy>().ToTable("tlspolicies");
         }
     }
 }
