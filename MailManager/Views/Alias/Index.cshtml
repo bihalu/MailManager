@@ -1,8 +1,46 @@
-﻿@{
+﻿@model List<Alias>
+@{
     ViewData["Title"] = "Alias";
 }
+<div class="row">
+    <div class="col-md-3 pull-left">
+        <h2>@ViewData["Title"] <span class="badge">@Model.Count</span></h2>
+    </div>
+    <div class="col-md-1 pull-right">
+        <h2><a href="/Alias/Create"><span class="glyphicon glyphicon-plus pull-right" aria-hidden="true" title="neuen Alias anlegen"></span></a></h2>
+    </div>
+</div>
+<table class="table table-bordered">
+    <thead>
+        <tr class="active">
+            <th>Quell Benutzer</th>
+            <th>Quell Dom&auml;ne</th>
+            <th>Ziel Benutzer</th>
+            <th>Ziel Dom&auml;ne</th>
+            <th>Aktiv</th>
 
-<h2>@ViewData["Title"]</h2>
-<p>
-    Diese Seite ist noch nicht fertig
-</p>
+        </tr>
+    </thead>
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        var alias = Model[i];
+        <tbody>
+            <tr>
+                <th><i class="text-primary">@alias.SourceUsername</i></th>
+                <th><i class="text-primary">@alias.SourceDomainname</i></th>
+                <th><i class="text-primary">@alias.DestinationUsername</i></th>
+                <th><i class="text-primary">@alias.DestinationDomainname</i></th>
+                <th>
+                    @if (alias.Enabled)
+                    {
+                        <i class="fa fa-check fa-lg" style="color:green" aria-hidden="true"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-times fa-lg" style="color:red" aria-hidden="true"></i>
+                    }
+                </th>
+            </tr>
+        </tbody>
+    }
+</table>

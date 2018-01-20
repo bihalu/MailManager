@@ -1,8 +1,48 @@
-﻿@{
+﻿@model AliasViewModel
+@{
     ViewData["Title"] = "Alias erstellen";
 }
-
 <h2>@ViewData["Title"]</h2>
-<p>
-    Diese Seite ist noch nicht fertig
-</p>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div class="input-group form-group">
+                <span class="input-group-addon" style="width:100px"><b>Quelle:</b></span>
+                <input asp-for="@Model.SourceUsername" class="form-control" />
+                <span class="input-group-addon">@@</span>
+                <select asp-for="@Model.SourceDomainname" class="form-control"
+                        asp-items="@(new SelectList(Model.DomainnameList, "Id", "Domainname"))"></select>
+            </div>
+            <div class="input-group form-group">
+                <span class="input-group-addon" style="width:100px"><b>Ziel:</b></span>
+                <input asp-for="@Model.DestinationUsername" class="form-control" />
+                <span class="input-group-addon">@@</span>
+                <select asp-for="@Model.DestinationDomainname" class="form-control"
+                        asp-items="@(new SelectList(Model.DomainnameList, "Id", "Domainname"))"></select>
+            </div>
+            <div class="input-group form-group">
+                <span class="input-group-addon" style="width:100px"><b>Aktiv:</b></span>
+                <input asp-for="@Model.Enabled" type="checkbox" class="form-control" style="width:36px" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Erstellen</button>
+                &nbsp;&nbsp;
+                <a asp-controller="Alias" asp-action="Index" class="btn btn-danger">Abbrechen</a>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <p>
+            Zum Erstellen eines Alias bitte Quelle und Ziel in dem Format Benutzer@@Dom&auml;ne eingeben 
+            und dann auf den Button &quot;Erstellen&quot; dr&uuml;cken.
+        </p>
+    </div>
+</div>
+@if (null != Model && Model.ShowMessage)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <p class="alert-danger">@Model.Message</p>
+        </div>
+    </div>
+}
