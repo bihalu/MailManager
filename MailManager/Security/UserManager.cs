@@ -27,7 +27,7 @@ namespace MailManager.Security
         {
             var account = _dataContext.Accounts.Where(a => a.Username == username).FirstOrDefault();
 
-            if(account != null)
+            if (account != null)
             {
                 string passwordHash = account.Password.Substring(account.Password.IndexOf("$6$"));
                 string salt = passwordHash.Substring(0, 19);

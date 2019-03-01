@@ -27,7 +27,7 @@ namespace MailManager.Controllers
         {
             var domains = new List<DomainViewModel>();
 
-            if (_dataContext.Domains.Any())
+            if (_dataContext.Domains.Count() > 0)
             {
                 foreach (var domain in _dataContext.Domains)
                 {

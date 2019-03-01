@@ -1,6 +1,6 @@
 ﻿MIT Lizenz
 
-Copyright (c) 2018 Hans-Peter Wissenbach
+Copyright (c) 2019 Hans-Peter Wissenbach
 Hiermit wird unentgeltlich jeder Person, die eine Kopie der Software und der 
 zugehörigen Dokumentationen (die "Software") erhält, die Erlaubnis erteilt, 
 sie uneingeschränkt zu nutzen, inklusive und ohne Ausnahme mit dem Recht, 
@@ -24,7 +24,7 @@ SOFTWARE ODER SONSTIGER VERWENDUNG DER SOFTWARE ENTSTANDEN.
 
 MIT License
 
-Copyright (c) 2018 Hans-Peter Wissenbach
+Copyright (c) 2019 Hans-Peter Wissenbach
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

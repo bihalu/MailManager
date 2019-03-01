@@ -23,7 +23,7 @@ namespace MailManager.Controllers
         {
             var aliases = new List<Alias>();
 
-            if(_dataContext.Aliases.Any())
+            if(_dataContext.Aliases.Count() > 0)
             {
                 aliases = _dataContext.Aliases.ToList();
             }

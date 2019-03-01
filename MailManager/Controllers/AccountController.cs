@@ -81,7 +81,7 @@ namespace MailManager.Controllers
         {
             var accounts = new List<Account>();
 
-            if (_dataContext.Accounts.Any())
+            if (_dataContext.Accounts.Count() > 0)
             {
                 accounts = _dataContext.Accounts.ToList();
             }

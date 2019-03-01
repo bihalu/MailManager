@@ -22,7 +22,7 @@ namespace MailManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(
-                options => options.UseMySql(Configuration.GetConnectionString("DatabaseConnection"))
+                options => options.UseMySQL(Configuration.GetConnectionString("DatabaseConnection"))
             );
 
             int cookieExpiryDays = Configuration.GetValue("Security:CookieExpiryDays", 7);
@@ -43,7 +43,6 @@ namespace MailManager
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {
