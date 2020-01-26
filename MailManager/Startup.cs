@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MailManager.Data;
 using MailManager.Security;
+using Microsoft.Extensions.Hosting;
 
 namespace MailManager
 {
@@ -38,7 +39,7 @@ namespace MailManager
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -55,7 +56,14 @@ namespace MailManager
 
             app.UseStatusCodePages();
 
-            app.UseMvcWithDefaultRoute();
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}");
+            });
         }
     }
 }
